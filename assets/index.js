@@ -12,6 +12,7 @@ var forecastContainerEl = document.querySelector("#forecast-container");
 var WeatherDayIconEl = document.querySelector("#weather-day-icon");
 var weatherDayContainerEl = document.querySelector("#weather-day-container");
 var outerForecastContainerEL = document.querySelector("#outer-forecast-container");
+var buttonContainerEl = document.querySelector("#button-container");
 
 // creates the 5 day box forcast below top container
 function populateFiveDay(data) {
@@ -47,7 +48,8 @@ function populateFiveDay(data) {
                             </dl>
                         </div>
                         `;
-                        forecastContainerEl.appendChild(div);
+
+                forecastContainerEl.appendChild(div);
     });
     outerForecastContainerEL.classList.remove("hide");
 }
@@ -64,6 +66,10 @@ function getWeatherApi(city) {
     .then(function (data) {
         console.log(data)
         
+        saveCitySearch(city);
+        populateButtons();
+
+
         var cityObject = data[0];
         var lat = cityObject.lat;
         var lon = cityObject.lon;
@@ -90,6 +96,14 @@ function getWeatherApi(city) {
             weatherDayWindEl.textContent = windSpeed;
             weatherDayHumidityEl.textContent = humidity;
             weatherDayUvIndexEl.textContent = uviIndex;
+            if (uviIndex < 3) {
+                weatherDayUvIndexEl.classList.add("favorable");
+              } else if (uviIndex < 7) {
+                weatherDayUvIndexEl.classList.add("moderate");
+              } else {
+                weatherDayUvIndexEl.classList.add("severe");
+              }
+    
             
             WeatherDayIconEl.src= `https://openweathermap.org/img/wn/${icon}.png`;
             weatherDayContainerEl.classList.remove("hide");
@@ -120,6 +134,7 @@ function saveCitySearch(city) {
     window.localStorage.setItem("cities", JSON.stringify(cities));
 }
 
+// creates buttons for pas searched cities below search bar
 function populateButtons() {
     buttonContainerEl.innerHTML = "";
     var cities = window.localStorage.getItem("cities");
@@ -139,6 +154,7 @@ function populateButtons() {
     });
 }
 
+// takes click of button to fetch api function
 function handleButtonClick(event) {
     var target = event.target;
     var city = target.getAttribute("data-city");
@@ -160,10 +176,12 @@ function FormSubmitHandler(event) {
 
 function addEventListeners() {
     searchFormEl.addEventListener("submit", FormSubmitHandler);
+    buttonContainerEl.addEventListener("click", handleButtonClick);
 }
 
 function init() {
     addEventListeners();
+    populateButtons();
 }
 
 
