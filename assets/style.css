@@ -5,11 +5,37 @@ header {
     padding: 20px;
 }
 
-.card-weather {
-    background-color: palevioletred;
-}
-
 dt {
     float: left;
     margin-right: 7px;
+}
+
+#weather-day-container {
+    border: 1px solid purple;
+    margin-top: 20px;
+    background-color: lightgray;
+}
+
+#button-container {
+    padding: 20px;
+}
+
+#weather-day-uv-index {
+    padding: 2px;
+}
+
+.hide {
+    display:none;
+}
+
+.favorable {
+    background-color: green;
+}
+
+.moderate {
+    background-color: yellow;
+}
+
+.severe {
+    background-color: red;
 }
