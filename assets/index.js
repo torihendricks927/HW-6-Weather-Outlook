@@ -4,14 +4,14 @@ var weatherDayTempEl = document.querySelector("weather-day-temp");
 var weatherDayWindEl = document.querySelector("#weather-day-wind");
 var weatherDayUvIndexEl = document.querySelector("#weather-day-uv-index");
 var weatherDayHumidityEl = document.querySelector("#weather-day-humidity");
-// var searchButton = document.querySelector('#submit');
 var searchFormCityInputEl = document.querySelector("#search-form-city-input");
-// var weatherResult = document.querySelector('#results');
-// var cityInput = document.querySelector('#city');
-// var city;
 var baseUrl = "https://api.openweathermap.org/";
 var apiKey = "876f6264d3b8b4298eef0f75784efd16";
 var weatherDayDateEl = document.querySelector("#weather-day-date");
+var forecastContainerEl = document.querySelector("#forecast-container");
+var WeatherDayIconEl = document.querySelector("#weather-day-icon");
+var weatherDayContainerEl = document.querySelector("#weather-day-container");
+var outerForecastContainerEL = document.querySelector("#outer-forecast-container");
 
 function populateFiveDay(data) {
     data.forEach(function(day) {
@@ -52,16 +52,40 @@ function getWeatherApi(city) {
             var humidity = current.humidity;
             var uviIndex = current.uvi;
             var date = moment(Date.now()).format("L");
+            var icon = current.weather[0].icon;
 
             weatherDayCityEl.textContent = city;
+            weatherDayDateEl.textContent = date;
             weatherDayTempEl.textContent = temp;
             weatherDayWindEl.textContent = windSpeed;
             weatherDayHumidityEl.textContent = humidity;
             weatherDayUvIndexEl.textContent = uviIndex;
+            
+            WeatherDayIconEl.src= `https://openweathermap.org/img/wn/${icon}.png`;
+            weatherDayContainerEl.classList.remove("hide");
+            populateFiveDay(data.daily);
 
+        });
+    });
+}
 
-        })}
-        );
+function saveCitySearch(city) {
+    city = city.toLowerCase();
+    var cities = window.localStorage.getItem("cities");
+    if (cities) {
+        cities = JSON.parse(cities);
+    }
+    else {
+        cities = [];
+    }
+    if (cities.includes(city)) {
+        return;
+    }
+    else {
+        cities.push(city);
+    }
+
+    window.localStorage.setItem("cities", JSON.stringify(cities));
 }
 
 
@@ -85,17 +109,5 @@ function init() {
     addEventListeners();
 }
 
-
-
-
-// var saveCitySearch = function() {
-//     localStorage.setItem("city", JSON.stringify(city));
-// }
-
-// var returnPastSearch = function() {
-//     localStorage.getItem("city", JSON.stringify(city));
-// }
-
-// searchButton.addEventListener('click', FormSubmitHandler);
 
 init();
